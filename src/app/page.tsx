@@ -9,9 +9,30 @@ import MetricCardOne from "@/components/sections/metrics/MetricCardOne";
 import FaqDouble from "@/components/sections/faq/FaqDouble";
 import ContactFaq from "@/components/sections/contact/ContactFaq";
 import FooterBaseReveal from "@/components/sections/footer/FooterBaseReveal";
+import VirtualTryOnUpload from "@/components/virtualTryOn/VirtualTryOnUpload";
+import VirtualTryOnPreview from "@/components/virtualTryOn/VirtualTryOnPreview";
 import { Clock, Package, Sparkles, Target, Zap } from "lucide-react";
+import { useState } from "react";
 
 export default function LandingPage() {
+  const [userPhoto, setUserPhoto] = useState<string | null>(null);
+  const [clothesPhoto, setClothesPhoto] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const handleUserPhotoUpload = (photo: string) => {
+    setUserPhoto(photo);
+  };
+
+  const handleClothesPhotoUpload = (photo: string) => {
+    setClothesPhoto(photo);
+  };
+
+  const handleStartTryOn = () => {
+    if (userPhoto && clothesPhoto) {
+      setShowPreview(true);
+    }
+  };
+
   return (
     <ThemeProvider
       defaultButtonVariant="directional-hover"
@@ -30,10 +51,11 @@ export default function LandingPage() {
           navItems={[
             { name: "Features", id: "features" },
             { name: "How It Works", id: "about" },
+            { name: "Try-On", id: "tryon" },
             { name: "FAQ", id: "faq" },
             { name: "Contact", id: "contact" },
           ]}
-          button={{ text: "Try Now", href: "hero" }}
+          button={{ text: "Try Now", href: "tryon" }}
           brandName="VirtualTryOn"
         />
       </div>
@@ -43,8 +65,8 @@ export default function LandingPage() {
           logoText="VIRTUAL TRY ON"
           description="Upload your photo and clothes to instantly see how outfits look on you. No more guessing – visualize your style in seconds with AI-powered virtual fitting."
           buttons={[
-            { text: "Start Try-On", href: "#features" },
-            { text: "Learn More", href: "#about" },
+            { text: "Start Try-On", href: "tryon" },
+            { text: "Learn More", href: "about" },
           ]}
           slides={[
             {
@@ -100,10 +122,39 @@ export default function LandingPage() {
           title="Revolutionary AI-Powered Virtual Fitting Technology. Say goodbye to sizing anxiety and hello to confident shopping."
           useInvertedBackground={true}
           buttons={[
-            { text: "Get Started Free", href: "#contact" },
-            { text: "View Demo", href: "#features" },
+            { text: "Get Started Free", href: "tryon" },
+            { text: "View Demo", href: "features" },
           ]}
         />
+      </div>
+
+      <div id="tryon" data-section="tryon">
+        <div className="w-full py-20 px-4 md:px-8 bg-gradient-to-b from-transparent to-background/50">
+          <div className="max-w-6xl mx-auto">
+            {!showPreview ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <VirtualTryOnUpload
+                  title="Upload Your Photo"
+                  description="Select a clear full-body photo for accurate measurements"
+                  onPhotoUpload={handleUserPhotoUpload}
+                  uploadType="user"
+                />
+                <VirtualTryOnUpload
+                  title="Upload Clothing Photo"
+                  description="Choose the clothes you want to try on"
+                  onPhotoUpload={handleClothesPhotoUpload}
+                  uploadType="clothes"
+                />
+              </div>
+            ) : (
+              <VirtualTryOnPreview
+                userPhoto={userPhoto}
+                clothesPhoto={clothesPhoto}
+                onBack={() => setShowPreview(false)}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
       <div id="metrics" data-section="metrics">
@@ -170,7 +221,7 @@ export default function LandingPage() {
           ]}
           ctaTitle="Ready to Transform Your Shopping?"
           ctaDescription="Start your virtual try-on journey today. Get instant access to our AI-powered fitting technology."
-          ctaButton={{ text: "Launch App", href: "#hero" }}
+          ctaButton={{ text: "Launch App", href: "tryon" }}
           ctaIcon={Sparkles}
           animationType="slide-up"
           accordionAnimationType="smooth"
@@ -183,9 +234,9 @@ export default function LandingPage() {
           columns={[
             {
               title: "Product",              items: [
-                { label: "Features", href: "#features" },
-                { label: "How It Works", href: "#about" },
-                { label: "Pricing", href: "#" },
+                { label: "Features", href: "features" },
+                { label: "How It Works", href: "about" },
+                { label: "Try-On", href: "tryon" },
                 { label: "Blog", href: "#" },
               ],
             },
@@ -194,7 +245,7 @@ export default function LandingPage() {
                 { label: "About Us", href: "#" },
                 { label: "Careers", href: "#" },
                 { label: "Press", href: "#" },
-                { label: "Contact", href: "#contact" },
+                { label: "Contact", href: "contact" },
               ],
             },
             {
